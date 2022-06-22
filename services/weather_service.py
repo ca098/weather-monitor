@@ -34,7 +34,7 @@ class WeatherService:
 
         existing_record = next((Subscription(s) for s in self.mysql_service.get_subscription(email=email, latitude=lat, longitude=lon)), None)
 
-        # Return if pre-existing record (could be changed to call update record)
+        # Return if pre-existing record (could be changed to call update record?)
         if existing_record:
             return {"error": f"Entry already exists for the email '{email}', and location '{location}'."
                              f" Please remove the entry to be able to add a new one."}
@@ -46,7 +46,7 @@ class WeatherService:
 
         return {"message": f"Subscription has been created successfully"}
 
-    def update_subscription(self, email: str, location: str, params: dict):
+    def update_subscription(self, email: str, location: str, params: dict) -> dict:
         defaults = SUBSCRIPTION_DEFAULTS
         defaults.update(params)
 

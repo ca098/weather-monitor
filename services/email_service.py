@@ -1,5 +1,7 @@
 import time
 import atexit
+from typing import Optional
+
 import requests
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -10,7 +12,7 @@ from services.mysql_service import MySqlService
 
 
 class EmailService:
-    def __init__(self, caching_service: CachingService, mysql_service: MySqlService, config: dict):
+    def __init__(self, caching_service: CachingService, mysql_service: MySqlService, config: Optional[dict]):
         self.caching_service = caching_service
         self.mysql_service = mysql_service
         self.config = config

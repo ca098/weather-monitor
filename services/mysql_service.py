@@ -1,6 +1,6 @@
 import time
 from threading import Lock
-from typing import Optional
+from typing import Optional, List
 
 import mysql.connector as mysql
 import logging
@@ -85,16 +85,16 @@ class MySqlService:
 
     """ --- Specific SQL queries below this section --- """
 
-    def get_weather_codes(self):
+    def get_weather_codes(self) -> List[tuple]:
         return self.__read__(GET_WEATHER_CODES_QUERY)
 
-    def get_subscription(self, email: str, latitude: float, longitude: float) -> tuple:
+    def get_subscription(self, email: str, latitude: float, longitude: float) -> List[tuple]:
         return self.__read__(GET_SUBSCRIPTION_RECORD_QUERY, (email, latitude, longitude))
 
-    def get_subscriptions_by_email(self, email: str):
+    def get_subscriptions_by_email(self, email: str) -> List[tuple]:
         return self.__read__(GET_SUBSCRIPTIONS_BY_EMAIL_QUERY, (email,))
 
-    def get_all_subscriptions(self):
+    def get_all_subscriptions(self) -> List[tuple]:
         return self.__read__(GET_ALL_SUBSCRIPTIONS_QUERY)
 
     def update_subscription(self, subscription_id: Optional[int], temp_celsius_above: Optional[float], temp_celsius_below: Optional[float],
