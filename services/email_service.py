@@ -37,12 +37,17 @@ class EmailService:
         all_subscriptions = self.get_active_subscriptions()
 
         # Get distinct location names
-        locations = {loc.location: [{"lat": loc.latitude, "lon": loc.longitude}] for loc in all_subscriptions}
+        locations = {loc.location: {"lat": loc.latitude, "lon": loc.longitude} for loc in all_subscriptions}
 
         # TODO - Tests, optimise this method & README.md
-
-        for loc in locations:
-            pass
+        for loc, val in locations.items():
+            lat = val["lat"]
+            lon = val["lon"]
+            weather_data = requests.get(f"{open_weather_url}2.5/weather?lat={lat}&lon={lon}&appid={open_weather_api_key}").json()
+            users_for_location = [u for u in all_subscriptions if u.location == loc]
+            for users in users_for_location:
+                # Create "email" here if metrics have been met.
+                pass
 
     def get_active_subscriptions(self):
         all_subscriptions = [SubscriptionList(a_s) for a_s in self.mysql_service.get_all_subscriptions()]
