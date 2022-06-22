@@ -1,0 +1,24 @@
+Delete a weather subscription
+---
+tags:
+  - Weather
+parameters:
+  - name: email
+    in: path
+    type: string
+    required: true
+    description: email
+
+  - name: location
+    in: path
+    type: string
+    required: true
+    description: location
+
+responses:
+  500:
+    description: Something went wrong
+  404:
+    description: No subscriptions found
+  200:
+    description: Success - Removed a weather subscription

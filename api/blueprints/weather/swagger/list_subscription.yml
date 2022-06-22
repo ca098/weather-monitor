@@ -1,0 +1,18 @@
+List weather subscriptions
+---
+tags:
+  - Weather
+parameters:
+  - name: email
+    in: path
+    type: string
+    required: true
+    description: email
+
+responses:
+  500:
+    description: Something went wrong
+  404:
+    description: No subscriptions found
+  200:
+    description: Success - Returned list of active subscriptions

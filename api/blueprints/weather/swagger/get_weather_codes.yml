@@ -1,0 +1,11 @@
+Get list of available weather codes
+---
+tags:
+  - Weather
+
+responses:
+  500:
+    description: Something went wrong
+
+  200:
+    description: Success - Returned list of active weather codes

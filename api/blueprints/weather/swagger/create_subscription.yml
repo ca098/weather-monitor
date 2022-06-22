@@ -1,0 +1,43 @@
+Create a weather subscription
+---
+tags:
+  - Weather
+parameters:
+  - name: email
+    in: path
+    type: string
+    required: true
+    description: email
+
+  - name: location
+    in: path
+    type: string
+    required: true
+    description: location
+
+  - in: body
+    name: JsonBody
+    description: Subscription Parameters
+    required: true
+    schema:
+      type: object
+      properties:
+        windSpeedExceeds:
+          description: Wind speed exceeds
+          type: integer
+        tempCelsiusAbove:
+          description: Temperature in celsius exceeds
+          type: integer
+        tempCelsiusBelow:
+          description: Temperature in celsius subceeds
+          type: integer
+        weatherCodeEquals:
+          description: Target weather is recorded
+          type: integer
+responses:
+  500:
+    description: Something went wrong
+  400:
+    description: Bad request
+  201:
+    description: Success - Created a new weather subscription
