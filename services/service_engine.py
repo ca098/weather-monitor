@@ -16,6 +16,7 @@ class ServiceEngine(object):
             cls._instance.mysql_service = MySqlService(cls._instance.config)
             cls._instance.caching_service = CachingService(cls._instance.config)
             cls._instance.weather_service = WeatherService(cls._instance.caching_service, cls._instance.mysql_service, cls._instance.config)
-            cls._instance.email_service = EmailService(cls._instance.caching_service, cls._instance.mysql_service, cls._instance.config)
+            cls._instance.email_service = EmailService(cls._instance.caching_service, cls._instance.mysql_service,
+                                                       cls._instance.weather_service, cls._instance.config)
 
         return cls._instance

@@ -6,7 +6,8 @@ from os.path import exists
 FILE_TIMESTAMP_FMT = "%Y-%m-%dT%H-%M-%S"
 TIMESTAMP_FMT = "%Y-%m-%d %H:%M:%S"
 
-LOG_PATH = os.path.join(os.path.abspath(os.curdir), "apilogs")
+DIR_PATH = os.path.abspath(os.curdir)
+LOG_PATH = os.path.join(DIR_PATH, "apilogs")
 if not exists(LOG_PATH):
     os.mkdir(LOG_PATH)
 

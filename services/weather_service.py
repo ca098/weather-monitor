@@ -86,6 +86,10 @@ class WeatherService:
         subscriptions = [SubscriptionList(es).to_digest_dict() for es in self.mysql_service.get_subscriptions_by_email(email)]
         return subscriptions
 
+    def get_weather_for_code(self, weather_code: int) -> str:
+        weather_codes = self.get_weather_codes()
+        return next((weather for weather, code in weather_codes.items() if int(code) == weather_code), None)
+
     def get_weather_codes(self) -> dict:
         cache_key = CACHE_KEY_WEATHER_CODES
 
