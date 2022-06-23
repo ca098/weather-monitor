@@ -39,5 +39,5 @@ responses:
     description: Something went wrong
   400:
     description: Bad request
-  201:
+  200:
     description: Success - Updated a weather subscription

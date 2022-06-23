@@ -25,5 +25,6 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 markers = [
     "get_request: GET HTTP response",
-    "post_request: Post HTTP response",
+    "post_request: POST HTTP response",
+    "delete_request: DELETE HTTP response"
 ]

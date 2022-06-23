@@ -39,7 +39,7 @@ def update_subscriptions(email: str, location: str):
     if "error" in update_subscription:
         return jsonify(update_subscription), 404
 
-    return jsonify(update_subscription), 201
+    return jsonify(update_subscription), 200
 
 
 @WEATHER_BLUEPRINT.route('/api/v1/list_subscription/<string:email>', methods=['GET'])
