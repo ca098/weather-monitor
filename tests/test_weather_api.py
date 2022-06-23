@@ -4,7 +4,7 @@ import random
 import pytest
 from faker import Faker
 
-from app import app  # Flask instance of the API
+from app import app
 from services.service_engine import ServiceEngine
 from tests.test_utils import *
 from utils.utils import API_ROOT_TEXT
