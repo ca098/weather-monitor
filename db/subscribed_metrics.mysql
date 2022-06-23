@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS `subscribed_metrics` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `subscriptions_id` int DEFAULT NULL,
+  `temp_celsius_above` double DEFAULT NULL,
+  `temp_celsius_below` double DEFAULT NULL,
+  `weather_code_equals` int DEFAULT NULL,
+  `wind_speed_exceeds` double DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_subscriptions_idx` (`subscriptions_id`),
+  CONSTRAINT `fk_subscriptions` FOREIGN KEY (`subscriptions_id`) REFERENCES `subscriptions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;

@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS `weather_codes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `thunderstorm` int DEFAULT NULL,
+  `drizzle` int DEFAULT NULL,
+  `rain` int DEFAULT NULL,
+  `snow` int DEFAULT NULL,
+  `tornado` int DEFAULT NULL,
+  `clear` int DEFAULT NULL,
+  `clouds` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
