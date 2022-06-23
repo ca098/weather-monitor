@@ -11,6 +11,9 @@ flasgger = "^0.9.5"
 Flask-Cors = "^3.0.10"
 redis = "^4.3.3"
 APScheduler = "^3.9.1"
+pytest = "^7.1.2"
+pytest-flask = "^1.2.0"
+Faker = "^13.14.0"
 
 [tool.poetry.dev-dependencies]
 

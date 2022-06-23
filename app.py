@@ -5,6 +5,7 @@ from flasgger import Swagger
 from flask_cors import CORS
 
 from api.blueprints.weather.weather_api import WEATHER_BLUEPRINT
+from utils.utils import API_ROOT_TEXT
 
 app = Flask(__name__)
 app.register_blueprint(WEATHER_BLUEPRINT)
@@ -30,9 +31,9 @@ CORS(app)
 swagger = Swagger(app, template=template)
 
 
-@app.route('/')
+@app.route("/")
 def root():
-    return 'Weather monitor API root'
+    return API_ROOT_TEXT
 
 
 if __name__ == '__main__':
