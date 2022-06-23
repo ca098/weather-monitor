@@ -55,7 +55,7 @@ class CachingService:
             LOG.exception(f"Problem initialising redis, assuming no cache: {e}")
             return None
 
-    def put(self, key, value, ex_seconds=10800):  # 3 Hours
+    def put(self, key, value, ex_seconds=10800) -> None:  # 3 Hours
         if self.r is None:
             return
         try:

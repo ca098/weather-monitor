@@ -15,7 +15,7 @@ fake = Faker()
 
 def get_valid_user_params() -> [str, str]:
     mail = fake.email()
-    location = random.choice(CITIES)
+    location = random.choice(CITIES).lower()
     return mail, location
 
 
@@ -42,10 +42,17 @@ def test_index_route():
 
 
 @pytest.mark.post_request
-def test_valid_create_subscription():
+def test_create_subscription():
     email, location = get_valid_user_params()
     request_body = get_valid_request_body()
 
     valid_response = create_subscription(email=email, location=location, params=request_body)
     assert valid_response.status_code == 201
     assert valid_response.json == {'message': 'Subscription has been created successfully'}
+
+    already_exists_response = create_subscription(email=email, location=location, params=request_body)
+    assert already_exists_response.status_code == 400
+    assert already_exists_response.json == {
+                "error": f"Entry already exists for the email '{email}', and location '{location}'."
+                f" Please remove the entry to be able to add a new one."
+            }
