@@ -1,9 +1,10 @@
-from faker import Faker
-import pytest
-from app import app  # Flask instance of the API
 import json
 import random
 
+import pytest
+from faker import Faker
+
+from app import app  # Flask instance of the API
 from services.service_engine import ServiceEngine
 from tests.test_utils import *
 from utils.utils import API_ROOT_TEXT
@@ -27,9 +28,14 @@ def get_valid_request_body() -> dict:
     }
 
 
+def create_subscription(email: str, location: str, params: dict):
+    return app.test_client().post(f'/api/v1/create_subscription/{email}/{location}',
+                                  data=json.dumps(params), content_type='application/json')
+
+
 @pytest.mark.get_request
 def test_index_route():
-    response = app.test_client().get('/')
+    response = app.test_client().get("/")
 
     assert response.status_code == 200
     assert response.data.decode("utf-8") == API_ROOT_TEXT
@@ -40,8 +46,6 @@ def test_valid_create_subscription():
     email, location = get_valid_user_params()
     request_body = get_valid_request_body()
 
-    response = app.test_client().post(f'/api/v1/create_subscription/{email}/{location}', data=json.dumps(request_body),
-                                      content_type='application/json')
-
-    assert response.status_code == 201
-    assert response.json == {'message': 'Subscription has been created successfully'}
+    valid_response = create_subscription(email=email, location=location, params=request_body)
+    assert valid_response.status_code == 201
+    assert valid_response.json == {'message': 'Subscription has been created successfully'}

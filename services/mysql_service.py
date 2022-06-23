@@ -1,9 +1,9 @@
+import logging
 import time
 from threading import Lock
-from typing import Optional, List
+from typing import List, Optional
 
 import mysql.connector as mysql
-import logging
 
 from db.queries import *
 

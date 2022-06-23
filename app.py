@@ -1,10 +1,9 @@
-from flask import Flask
-
-from utils.logger_utils import get_api_logger
 from flasgger import Swagger
+from flask import Flask
 from flask_cors import CORS
 
 from api.blueprints.weather.weather_api import WEATHER_BLUEPRINT
+from utils.logger_utils import get_api_logger
 from utils.utils import API_ROOT_TEXT
 
 app = Flask(__name__)

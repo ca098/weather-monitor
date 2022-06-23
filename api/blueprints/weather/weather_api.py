@@ -2,7 +2,7 @@ from flasgger import swag_from
 from flask import Blueprint, jsonify, request
 
 from services.service_engine import ServiceEngine
-from utils.utils import is_valid_email, INVALID_EMAIL_MESSAGE
+from utils.utils import INVALID_EMAIL_MESSAGE, is_valid_email
 
 WEATHER_BLUEPRINT = Blueprint('weather_blueprint', __name__)
 

@@ -1,11 +1,10 @@
 import atexit
 import logging
-from os import _Environ
 from datetime import datetime
+from os import _Environ
 from typing import List
 
 import requests
-
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from data_model.subscription_list import SubscriptionList
