@@ -87,7 +87,7 @@ def test_update_subscription():
 
 
 @pytest.mark.delete_request
-def test_update_subscription():
+def test_delete_subscription():
     email, location = get_valid_user_params()
 
     not_found_response = delete_subscription(email=email, location=location)
