@@ -50,7 +50,7 @@ class MySqlService:
             time.sleep(15)
             return mysql.connect(host=self.host, user=self.user, passwd=self.passwd, port=port)
 
-    def __read__(self, query, params=None):
+    def __read__(self, query, params=None) -> List:
         try:
             db = self.__mysql_connect__()
             cursor = db.cursor()
@@ -98,7 +98,7 @@ class MySqlService:
         return self.__read__(GET_ALL_SUBSCRIPTIONS_QUERY)
 
     def update_subscription(self, subscription_id: Optional[int], temp_celsius_above: Optional[float], temp_celsius_below: Optional[float],
-                            weather_code: Optional[int], wind_speed_exceeds: Optional[float]):
+                            weather_code: Optional[int], wind_speed_exceeds: Optional[float]) -> None:
         db = self.__connect__()
         cursor = db.cursor()
         cursor.execute(UPDATE_SUBSCRIPTION_QUERY, (temp_celsius_above, temp_celsius_below, weather_code, wind_speed_exceeds, subscription_id))
@@ -125,7 +125,7 @@ class MySqlService:
         db.close()
         return id
 
-    def delete_subscription(self, subscription_id: int):
+    def delete_subscription(self, subscription_id: int) -> None:
         db = self.__connect__()
         cursor = db.cursor()
         cursor.execute(DELETE_SUBSCRIPTION_QUERY, (subscription_id,))

@@ -1,6 +1,8 @@
 import atexit
+import logging
 from os import _Environ
 from datetime import datetime
+from typing import List
 
 import requests
 
@@ -20,7 +22,7 @@ class EmailService:
         self.weather_service = weather_service
         self.config = config
 
-    def run_mail_service(self):
+    def run_mail_service(self) -> None:
         refresh_rate = int(self.config.get("EMAIL_SERVICE_REFRESH", 3600))  # Default every hour
 
         scheduler = BackgroundScheduler()
@@ -30,7 +32,7 @@ class EmailService:
         # Shut down the scheduler when exiting the app
         atexit.register(lambda: scheduler.shutdown())
 
-    def collect_data_and_send_mail(self):
+    def collect_data_and_send_mail(self) -> None:
         open_weather_url = self.config.get("OPEN_WEATHER_MAP_HOST")
         open_weather_api_key = self.config.get("OPEN_WEATHER_MAP_KEY")
 
@@ -39,12 +41,17 @@ class EmailService:
         # Get distinct location names
         locations = {loc.location: {"lat": loc.latitude, "lon": loc.longitude} for loc in all_subscriptions}
 
-        # TODO - Tests README.md
+        # TODO - Tests
         for loc, val in locations.items():
             lat = val["lat"]
             lon = val["lon"]
-            wd = requests.get(f"{open_weather_url}2.5/weather?lat={lat}&lon={lon}&units=metric&appid={open_weather_api_key}").json()
+            req = requests.get(f"{open_weather_url}2.5/weather?lat={lat}&lon={lon}&units=metric&appid={open_weather_api_key}")
 
+            if req.status_code != 200:
+                logging.error(f"Bad request to open weather map. Response code: {req.status_code}")
+                return
+
+            wd = req.json()
             users_for_location = [u for u in all_subscriptions if u.location == loc]
             for user in users_for_location:
 
@@ -69,7 +76,7 @@ class EmailService:
                     subject, mail_text = self.create_mail_text(user, "temperature falls below", user.temp_celsius_below, wt)
                     self.send_mail(subject, mail_text, user.email, user.location)
 
-    def send_mail(self, subject: str, mail_text: str, email: str, location: str):
+    def send_mail(self, subject: str, mail_text: str, email: str, location: str) -> None:
         now = datetime.now().strftime("%d-%m-%Y-%H:%M:%S")
         with open(f"{DIR_PATH}/mock_emails/{email}-{location}_{now}.txt", 'w') as f:
             f.write(f"{subject}\n\n")
@@ -80,6 +87,6 @@ class EmailService:
         mail_text = f"Your alert for {metric} {user_value} has been met. Value reported for {user.location} is {weather_value}."
         return subject, mail_text
 
-    def get_active_subscriptions(self):
-        all_subscriptions = [SubscriptionList(a_s) for a_s in self.mysql_service.get_all_subscriptions()]
-        return all_subscriptions
+    def get_active_subscriptions(self) -> List[SubscriptionList]:
+        active_subscriptions = [SubscriptionList(a_s) for a_s in self.mysql_service.get_all_subscriptions()]
+        return active_subscriptions
