@@ -71,6 +71,9 @@ class WeatherService:
 
     def delete_subscription(self, email: str, location: str) -> dict:
         lat_lon = self.get_latitude_and_longitude(location)
+        if not lat_lon:
+            return {"error": f"The location '{location}' was not found. Make sure it was entered correctly."}
+
         lat = lat_lon["lat"]
         lon = lat_lon["lng"]
 
