@@ -123,7 +123,12 @@ class WeatherService:
 
                 lat_lon["lat"] = format(lat_lon["lat"], ".2f")
                 lat_lon["lng"] = format(lat_lon["lng"], ".2f")
-                self.caching_service.put(location_cache_key, lat_lon)
+                self.caching_service.put(location_cache_key, lat_lon, ex_seconds=43200)  # 12 Hours
+
+                """
+                I should have a location table in the DB, and add to it here, we only ever need to call this
+                API once for a unique location.
+                """
 
                 return lat_lon
 
