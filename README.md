@@ -13,7 +13,7 @@ This is a lightweight Flask API to create weather alerts for subscribed topics. 
 I've added an endpoint at `/api/v1/get_weather_codes` that will return the list of available weather codes. An example response is:
 
 ```sh
-curl -s http://127.0.0.1:5000//api/v1/get_weather_codes
+curl -s http://127.0.0.1:5000/api/v1/get_weather_codes
 
 {
   "clear": 800,
