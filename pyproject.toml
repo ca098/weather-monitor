@@ -20,3 +20,9 @@ Faker = "^13.14.0"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+markers = [
+    "get_request: GET HTTP response",
+    "post_request: Post HTTP response",
+]

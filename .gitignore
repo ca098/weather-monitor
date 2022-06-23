@@ -8,6 +8,7 @@ DB/__pycache__/
 *.pot
 *.pyc
 
+.pytest_cache
 
 .env
 .venv
