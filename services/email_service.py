@@ -40,10 +40,12 @@ class EmailService:
         # Get distinct location names
         locations = {loc.location: {"lat": loc.latitude, "lon": loc.longitude} for loc in all_subscriptions}
 
-        # TODO - Tests
+        # O(n*m) - Could do with optimising
         for loc, val in locations.items():
             lat = val["lat"]
             lon = val["lon"]
+
+            # Called only for every unique location
             req = requests.get(f"{open_weather_url}2.5/weather?lat={lat}&lon={lon}&units=metric&appid={open_weather_api_key}")
 
             if req.status_code != 200:
