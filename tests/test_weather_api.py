@@ -102,10 +102,15 @@ def test_list_subscriptions():
     email, location = get_valid_user_params()
     request_body = get_valid_request_body()
 
+    """
+     TODO - loop over a few times and iteratively add distinct location paired with original email,
+            keep record of each location and assert email is valid in list, as well as locations.
+    """
+
     valid_response = create_or_update_subscription(email=email, location=location, params=request_body, update=False)
     assert valid_response.status_code == 201
 
-    ignore, location = get_valid_user_params()
+    _, location = get_valid_user_params()
     request_body = get_valid_request_body()
 
     valid_response = create_or_update_subscription(email=email, location=location, params=request_body, update=False)
