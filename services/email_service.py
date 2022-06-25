@@ -45,7 +45,7 @@ class EmailService:
             lat = val["lat"]
             lon = val["lon"]
 
-            # Called only for every unique location
+            # Only called for each unique location
             req = requests.get(f"{open_weather_url}2.5/weather?lat={lat}&lon={lon}&units=metric&appid={open_weather_api_key}")
 
             if req.status_code != 200:
