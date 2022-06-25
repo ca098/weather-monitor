@@ -1,0 +1,3 @@
+Weather Alert for test@example.com - madrid
+
+Your alert for weather type equals clear has been met. Value reported for madrid is clear.

@@ -1,3 +1,0 @@
-Weather Alert for lhernandez@example.org - moscow
-
-Your alert for wind speed exceeds 1.0 has been met. Value reported for moscow is 1.58.
