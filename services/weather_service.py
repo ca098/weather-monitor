@@ -156,7 +156,7 @@ class WeatherService:
             # Fetch from DB
             stored_location = self.mysql_service.get_location_by_name(location=location)
             if stored_location:
-                return next((Location(loc).to_digest_dict() for loc in stored_location), None)
+                return next((Location(loc).to_digest_dict() for loc in stored_location), {})
 
             open_cage_url = (
                 f"{self.open_cage_base_url}q={location}&key={self.open_cage_data_key}"

@@ -88,7 +88,7 @@ class MySqlService:
     def get_weather_codes(self) -> List[tuple]:
         return self.__read__(GET_WEATHER_CODES_QUERY)
 
-    def get_subscription(self, email: str, location_id) -> List[tuple]:
+    def get_subscription(self, email: str, location_id: int) -> List[tuple]:
         return self.__read__(GET_SUBSCRIPTION_RECORD_QUERY, (email, location_id))
 
     def get_subscriptions_by_email(self, email: str) -> List[tuple]:
