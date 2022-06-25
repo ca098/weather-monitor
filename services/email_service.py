@@ -37,7 +37,7 @@ class EmailService:
 
         all_subscriptions = self.get_active_subscriptions()
 
-        # Get distinct location names
+        # Get distinct location names of active locations
         locations = {loc.location: {"lat": loc.latitude, "lon": loc.longitude} for loc in all_subscriptions}
 
         # O(n*m) - Could do with optimising
