@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS `subscriptions` (
   `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(45) DEFAULT NULL,
-  `latitude` double DEFAULT NULL,
-  `longitude` double DEFAULT NULL,
-  `location` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `location_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `location_fk_idx` (`location_id`),
+  CONSTRAINT `location_fk` FOREIGN KEY (`location_id`) REFERENCES `location` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;

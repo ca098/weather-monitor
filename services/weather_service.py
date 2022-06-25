@@ -1,7 +1,9 @@
 import logging
 
 import requests
+import re
 
+from data_model.location import Location
 from data_model.subscription import Subscription
 from data_model.subscription_list import SubscriptionList
 from data_model.weather_codes import WeatherCodes
@@ -33,18 +35,8 @@ class WeatherService:
                 "error": f"The location '{location}' was not found. Make sure it was entered correctly."
             }
 
-        lat = lat_lon["lat"]
-        lon = lat_lon["lng"]
-
-        existing_record = next(
-            (
-                Subscription(s)
-                for s in self.mysql_service.get_subscription(
-                    email=email, latitude=lat, longitude=lon
-                )
-            ),
-            None,
-        )
+        loc_id = lat_lon["id"]
+        existing_record = next((Subscription(s) for s in self.mysql_service.get_subscription(email=email, location_id=loc_id)), None)
 
         # Return if pre-existing record (could be changed to call update record?)
         if existing_record:
@@ -54,7 +46,7 @@ class WeatherService:
             }
 
         sub_rec_id = self.mysql_service.insert_subscription(
-            email=email, latitude=lat, longitude=lon, location=location
+            email=email, location_id=loc_id
         )
         self.mysql_service.insert_subscribed_metric(
             subscription_id=sub_rec_id,
@@ -76,18 +68,8 @@ class WeatherService:
                 "error": f"The location '{location}' was not found. Make sure it was entered correctly."
             }
 
-        lat = lat_lon["lat"]
-        lon = lat_lon["lng"]
-
-        existing_record = next(
-            (
-                Subscription(s)
-                for s in self.mysql_service.get_subscription(
-                    email=email, latitude=lat, longitude=lon
-                )
-            ),
-            None,
-        )
+        loc_id = lat_lon["id"]
+        existing_record = next((Subscription(s) for s in self.mysql_service.get_subscription(email=email, location_id=loc_id)), None)
 
         if existing_record:
             self.mysql_service.update_subscription(
@@ -112,18 +94,8 @@ class WeatherService:
                 "error": f"The location '{location}' was not found. Make sure it was entered correctly."
             }
 
-        lat = lat_lon["lat"]
-        lon = lat_lon["lng"]
-
-        existing_record = next(
-            (
-                Subscription(s)
-                for s in self.mysql_service.get_subscription(
-                    email=email, latitude=lat, longitude=lon
-                )
-            ),
-            None,
-        )
+        loc_id = lat_lon["id"]
+        existing_record = next((Subscription(s) for s in self.mysql_service.get_subscription(email=email, location_id=loc_id)), None)
 
         if existing_record:
             self.mysql_service.delete_subscription(existing_record.id)
@@ -172,12 +144,19 @@ class WeatherService:
         return weather_codes
 
     def get_latitude_and_longitude(self, location: str) -> dict:
+        if not re.match("^[A-Za-z0-9_-]*$", location):
+            return {}
 
         try:
             location_cache_key = f"location_{location}"
             cached_location_value = self.caching_service.get(location_cache_key)
             if cached_location_value is not None:
                 return cached_location_value
+
+            # Fetch from DB
+            stored_location = self.mysql_service.get_location_by_name(location=location)
+            if stored_location:
+                return next((Location(loc).to_digest_dict() for loc in stored_location), {})
 
             open_cage_url = (
                 f"{self.open_cage_base_url}q={location}&key={self.open_cage_data_key}"
@@ -194,14 +173,12 @@ class WeatherService:
 
                 lat_lon["lat"] = format(lat_lon["lat"], ".2f")
                 lat_lon["lng"] = format(lat_lon["lng"], ".2f")
-                self.caching_service.put(
-                    location_cache_key, lat_lon, ex_seconds=43200
-                )  # 12 Hours
 
-                """
-                I should have a location table in the DB, and add to it here, we only ever need to call this
-                API once for a unique location.
-                """
+                location_id = self.mysql_service.insert_location(latitude=lat_lon["lat"], longitude=lat_lon["lng"], location=location)
+
+                lat_lon["id"] = location_id
+
+                self.caching_service.put(location_cache_key, lat_lon, ex_seconds=43200)  # 12 Hours
 
                 return lat_lon
 

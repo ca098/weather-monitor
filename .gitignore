@@ -9,6 +9,7 @@ DB/__pycache__/
 *.pyc
 
 .pytest_cache
+local.env
 
 .env
 .venv

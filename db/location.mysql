@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS `location` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `latitude` double DEFAULT NULL,
+  `longitude` double DEFAULT NULL,
+  `location` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;

@@ -88,11 +88,14 @@ class MySqlService:
     def get_weather_codes(self) -> List[tuple]:
         return self.__read__(GET_WEATHER_CODES_QUERY)
 
-    def get_subscription(self, email: str, latitude: float, longitude: float) -> List[tuple]:
-        return self.__read__(GET_SUBSCRIPTION_RECORD_QUERY, (email, latitude, longitude))
+    def get_subscription(self, email: str, location_id: int) -> List[tuple]:
+        return self.__read__(GET_SUBSCRIPTION_RECORD_QUERY, (email, location_id))
 
     def get_subscriptions_by_email(self, email: str) -> List[tuple]:
         return self.__read__(GET_SUBSCRIPTIONS_BY_EMAIL_QUERY, (email,))
+
+    def get_location_by_name(self, location: str) -> List[tuple]:
+        return self.__read__(GET_LOCATION_BY_NAME_QUERY, (location,))
 
     def get_all_subscriptions(self) -> List[tuple]:
         return self.__read__(GET_ALL_SUBSCRIPTIONS_QUERY)
@@ -105,10 +108,19 @@ class MySqlService:
         db.commit()
         db.close()
 
-    def insert_subscription(self, email: str, latitude: float, longitude: float, location: str) -> int:
+    def insert_subscription(self, email: str, location_id: int) -> int:
         db = self.__connect__()
         cursor = db.cursor()
-        cursor.execute(INSERT_SUBSCRIPTION_QUERY, (email, latitude, longitude, location))
+        cursor.execute(INSERT_SUBSCRIPTION_QUERY, (email, location_id))
+        db.commit()
+        id = cursor.lastrowid
+        db.close()
+        return id
+
+    def insert_location(self, latitude: float, longitude: float, location: str):
+        db = self.__connect__()
+        cursor = db.cursor()
+        cursor.execute(INSERT_LOCATION_QUERY, (latitude, longitude, location))
         db.commit()
         id = cursor.lastrowid
         db.close()
