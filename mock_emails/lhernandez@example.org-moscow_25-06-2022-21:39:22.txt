@@ -1,0 +1,3 @@
+Weather Alert for lhernandez@example.org - moscow
+
+Your alert for temperature exceeds 6.0 has been met. Value reported for moscow is 20.92.

@@ -1,3 +1,0 @@
-Weather Alert for connor@example.com - leeds
-
-Your alert for temperature exceeds 0.0 has been met. Value reported for leeds is 26.37.
