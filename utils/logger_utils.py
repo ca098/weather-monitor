@@ -13,8 +13,10 @@ if not exists(LOG_PATH):
 
 
 def get_api_logger():
-    logging.basicConfig(filename=f"apilogs/LOG-{datetime.strftime(datetime.now(), FILE_TIMESTAMP_FMT)}.log",
-                        filemode="w",
-                        level="DEBUG",
-                        format="%(asctime)s %(levelname)s %(module)s - %(funcName)s: %(message)s",
-                        datefmt=TIMESTAMP_FMT)
+    logging.basicConfig(
+        filename=f"apilogs/LOG-{datetime.strftime(datetime.now(), FILE_TIMESTAMP_FMT)}.log",
+        filemode="w",
+        level="DEBUG",
+        format="%(asctime)s %(levelname)s %(module)s - %(funcName)s: %(message)s",
+        datefmt=TIMESTAMP_FMT,
+    )

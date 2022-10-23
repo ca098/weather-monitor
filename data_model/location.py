@@ -6,8 +6,4 @@ class Location:
         self.location = db_record[3]
 
     def to_digest_dict(self):
-        return {
-            "id": self.id,
-            "lat": self.latitude,
-            "lng": self.longitude
-        }
+        return {"id": self.id, "lat": self.latitude, "lng": self.longitude}

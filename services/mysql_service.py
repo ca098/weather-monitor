@@ -9,18 +9,18 @@ from db.queries import *
 
 LOG = logging.getLogger(__name__)
 
-WRITE_MODE = 'WRITE_MODE'
-READ_MODE = 'READ_MODE'
+WRITE_MODE = "WRITE_MODE"
+READ_MODE = "READ_MODE"
 
 
 class MySqlService:
     def __init__(self, config):
         self.config = config
         self.lock = Lock()
-        self.host = self.config.get('DB_HOST')
-        self.user = self.config.get('DB_USERNAME')
-        self.passwd = self.config.get('DB_PASSWORD')
-        self.database = self.config.get('DB_NAME')
+        self.host = self.config.get("DB_HOST")
+        self.user = self.config.get("DB_USERNAME")
+        self.passwd = self.config.get("DB_PASSWORD")
+        self.database = self.config.get("DB_NAME")
 
         self.__connect__()
 
@@ -28,7 +28,9 @@ class MySqlService:
         try:
             cnx = self.__mysql_connect__()
         except Exception as e:
-            logging.info(f'Connection to DB initially failed, restarting in 30 seconds: {str(e)}')
+            logging.info(
+                f"Connection to DB initially failed, restarting in 30 seconds: {str(e)}"
+            )
             time.sleep(30)
             cnx = self.__mysql_connect__()
 
@@ -44,11 +46,18 @@ class MySqlService:
     def __mysql_connect__(self):
         port = 3306
         try:
-            return mysql.connect(host=self.host, user=self.user, passwd=self.passwd, port=port)
+            return mysql.connect(
+                host=self.host, user=self.user, passwd=self.passwd, port=port
+            )
         except Exception as e:
-            LOG.error('Connecting to the database failed, retrying in 15 seconds. \n\nERROR: ' + str(e))
+            LOG.error(
+                "Connecting to the database failed, retrying in 15 seconds. \n\nERROR: "
+                + str(e)
+            )
             time.sleep(15)
-            return mysql.connect(host=self.host, user=self.user, passwd=self.passwd, port=port)
+            return mysql.connect(
+                host=self.host, user=self.user, passwd=self.passwd, port=port
+            )
 
     def __read__(self, query, params=None) -> List:
         try:
@@ -62,7 +71,11 @@ class MySqlService:
             db.close()
             return results
         except Exception as e:
-            LOG.error('Reading from database threw exception. Query: {}, Exception: {}'.format(query, str(e)))
+            LOG.error(
+                "Reading from database threw exception. Query: {}, Exception: {}".format(
+                    query, str(e)
+                )
+            )
             return []
 
     def __insert__(self, table: str, item_dict: dict) -> int:
@@ -71,14 +84,18 @@ class MySqlService:
         try:
             cursor = db.cursor()
             placeholder = ", ".join(["%s"] * len(item_dict))
-            stmt = INSERT_STMT.format(table=table, columns=",".join(item_dict.keys()), values=placeholder)
+            stmt = INSERT_STMT.format(
+                table=table, columns=",".join(item_dict.keys()), values=placeholder
+            )
             cursor.execute(stmt, list(item_dict.values()))
             db.commit()
             id = cursor.lastrowid
             db.close()
             return id
         except Exception as e:
-            LOG.error(f"Error inserting into table: {table}, item: {item_dict}. Error: {e}")
+            LOG.error(
+                f"Error inserting into table: {table}, item: {item_dict}. Error: {e}"
+            )
         finally:
             db.close()
         return id
@@ -100,11 +117,26 @@ class MySqlService:
     def get_all_subscriptions(self) -> List[tuple]:
         return self.__read__(GET_ALL_SUBSCRIPTIONS_QUERY)
 
-    def update_subscription(self, subscription_id: Optional[int], temp_celsius_above: Optional[float], temp_celsius_below: Optional[float],
-                            weather_code: Optional[int], wind_speed_exceeds: Optional[float]) -> None:
+    def update_subscription(
+        self,
+        subscription_id: Optional[int],
+        temp_celsius_above: Optional[float],
+        temp_celsius_below: Optional[float],
+        weather_code: Optional[int],
+        wind_speed_exceeds: Optional[float],
+    ) -> None:
         db = self.__connect__()
         cursor = db.cursor()
-        cursor.execute(UPDATE_SUBSCRIPTION_QUERY, (temp_celsius_above, temp_celsius_below, weather_code, wind_speed_exceeds, subscription_id))
+        cursor.execute(
+            UPDATE_SUBSCRIPTION_QUERY,
+            (
+                temp_celsius_above,
+                temp_celsius_below,
+                weather_code,
+                wind_speed_exceeds,
+                subscription_id,
+            ),
+        )
         db.commit()
         db.close()
 
@@ -126,12 +158,26 @@ class MySqlService:
         db.close()
         return id
 
-    def insert_subscribed_metric(self, subscription_id: Optional[int], temp_celsius_above: Optional[float], temp_celsius_below: Optional[float],
-                                 weather_code: Optional[int], wind_speed_exceeds: Optional[float]) -> int:
+    def insert_subscribed_metric(
+        self,
+        subscription_id: Optional[int],
+        temp_celsius_above: Optional[float],
+        temp_celsius_below: Optional[float],
+        weather_code: Optional[int],
+        wind_speed_exceeds: Optional[float],
+    ) -> int:
         db = self.__connect__()
         cursor = db.cursor()
-        cursor.execute(INSERT_SUBSCRIPTION_METRIC_QUERY, (subscription_id, temp_celsius_above, temp_celsius_below,
-                                                          weather_code, wind_speed_exceeds))
+        cursor.execute(
+            INSERT_SUBSCRIPTION_METRIC_QUERY,
+            (
+                subscription_id,
+                temp_celsius_above,
+                temp_celsius_below,
+                weather_code,
+                wind_speed_exceeds,
+            ),
+        )
         db.commit()
         id = cursor.lastrowid
         db.close()

@@ -1,4 +1,3 @@
-
 class WeatherCodes:
     def __init__(self, db_record):
         self.weather_code_id = db_record[0]
@@ -18,5 +17,5 @@ class WeatherCodes:
             "snow": self.snow,
             "tornado": self.tornado,
             "clear": self.clear,
-            "clouds": self.clouds
+            "clouds": self.clouds,
         }

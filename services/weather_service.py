@@ -1,7 +1,7 @@
 import logging
+import re
 
 import requests
-import re
 
 from data_model.location import Location
 from data_model.subscription import Subscription
@@ -36,7 +36,15 @@ class WeatherService:
             }
 
         loc_id = lat_lon["id"]
-        existing_record = next((Subscription(s) for s in self.mysql_service.get_subscription(email=email, location_id=loc_id)), None)
+        existing_record = next(
+            (
+                Subscription(s)
+                for s in self.mysql_service.get_subscription(
+                    email=email, location_id=loc_id
+                )
+            ),
+            None,
+        )
 
         # Return if pre-existing record (could be changed to call update record?)
         if existing_record:
@@ -69,7 +77,15 @@ class WeatherService:
             }
 
         loc_id = lat_lon["id"]
-        existing_record = next((Subscription(s) for s in self.mysql_service.get_subscription(email=email, location_id=loc_id)), None)
+        existing_record = next(
+            (
+                Subscription(s)
+                for s in self.mysql_service.get_subscription(
+                    email=email, location_id=loc_id
+                )
+            ),
+            None,
+        )
 
         if existing_record:
             self.mysql_service.update_subscription(
@@ -95,7 +111,15 @@ class WeatherService:
             }
 
         loc_id = lat_lon["id"]
-        existing_record = next((Subscription(s) for s in self.mysql_service.get_subscription(email=email, location_id=loc_id)), None)
+        existing_record = next(
+            (
+                Subscription(s)
+                for s in self.mysql_service.get_subscription(
+                    email=email, location_id=loc_id
+                )
+            ),
+            None,
+        )
 
         if existing_record:
             self.mysql_service.delete_subscription(existing_record.id)
@@ -156,7 +180,9 @@ class WeatherService:
             # Fetch from DB
             stored_location = self.mysql_service.get_location_by_name(location=location)
             if stored_location:
-                return next((Location(loc).to_digest_dict() for loc in stored_location), {})
+                return next(
+                    (Location(loc).to_digest_dict() for loc in stored_location), {}
+                )
 
             open_cage_url = (
                 f"{self.open_cage_base_url}q={location}&key={self.open_cage_data_key}"
@@ -174,11 +200,15 @@ class WeatherService:
                 lat_lon["lat"] = format(lat_lon["lat"], ".2f")
                 lat_lon["lng"] = format(lat_lon["lng"], ".2f")
 
-                location_id = self.mysql_service.insert_location(latitude=lat_lon["lat"], longitude=lat_lon["lng"], location=location)
+                location_id = self.mysql_service.insert_location(
+                    latitude=lat_lon["lat"], longitude=lat_lon["lng"], location=location
+                )
 
                 lat_lon["id"] = location_id
 
-                self.caching_service.put(location_cache_key, lat_lon, ex_seconds=43200)  # 12 Hours
+                self.caching_service.put(
+                    location_cache_key, lat_lon, ex_seconds=43200
+                )  # 12 Hours
 
                 return lat_lon
 

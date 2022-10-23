@@ -1,5 +1,4 @@
 class SubscriptionList:
-
     def __init__(self, db_record):
         self.subscription_id = db_record[0]
         self.email = db_record[1]
