@@ -31,7 +31,6 @@ class EmailService:
         refresh_rate = int(
             self.config.get("EMAIL_SERVICE_REFRESH", 3600)
         )  # Default every hour
-
         scheduler = BackgroundScheduler()
         scheduler.add_job(
             func=self.collect_data_and_send_mail,
@@ -39,7 +38,6 @@ class EmailService:
             seconds=refresh_rate,
         )
         scheduler.start()
-
         # Shut down the scheduler when exiting the app
         atexit.register(lambda: scheduler.shutdown())
 
@@ -87,7 +85,6 @@ class EmailService:
                         wd["wind"]["speed"],
                     )
                     self.send_mail(subject, mail_text, user.email, user.location)
-
                 if wc == user.weather_code:
                     weather_str = self.weather_service.get_weather_for_code(
                         user.weather_code
@@ -96,13 +93,11 @@ class EmailService:
                         user, "weather type equals", weather_str, weather_str
                     )
                     self.send_mail(subject, mail_text, user.email, user.location)
-
                 if wt > user.temp_celsius_above:
                     subject, mail_text = self.create_mail_text(
                         user, "temperature exceeds", user.temp_celsius_above, wt
                     )
                     self.send_mail(subject, mail_text, user.email, user.location)
-
                 if wt < user.temp_celsius_below:
                     subject, mail_text = self.create_mail_text(
                         user, "temperature falls below", user.temp_celsius_below, wt

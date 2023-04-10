@@ -1,5 +1,6 @@
 import logging
 import time
+from enum import Enum
 from threading import Lock
 from typing import List, Optional
 
@@ -9,8 +10,10 @@ from db.queries import *
 
 LOG = logging.getLogger(__name__)
 
-WRITE_MODE = "WRITE_MODE"
-READ_MODE = "READ_MODE"
+
+class DBMode(str, Enum):
+    WRITE_MODE = "WRITE_MODE"
+    READ_MODE = "READ_MODE"
 
 
 class MySqlService:
@@ -100,7 +103,7 @@ class MySqlService:
             db.close()
         return id
 
-    """ --- Specific SQL queries below this section --- """
+    """ --------- Specific SQL queries below this section --------- """
 
     def get_weather_codes(self) -> List[tuple]:
         return self.__read__(GET_WEATHER_CODES_QUERY)
