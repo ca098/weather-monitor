@@ -1,5 +1,5 @@
 import re
-from enum import Enum
+import enum
 
 SUBSCRIPTION_DEFAULTS = {
     "tempCelsiusAbove": None,
@@ -14,8 +14,13 @@ INVALID_EMAIL_MESSAGE = "Email is not in a valid format"
 valid_email_regex = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
 
 
-class StatusCode(int, Enum):
+class HttpStatus(enum.IntEnum):
     OKAY = 200
+    CREATED = 201
+
+    UNAUTHORIZED = 401
+    FORBIDDEN = 403
+
     ERROR = 500
 
 

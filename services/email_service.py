@@ -1,7 +1,6 @@
 import atexit
 import logging
 from datetime import datetime
-from os import _Environ
 from typing import List
 
 import requests
@@ -20,7 +19,7 @@ class EmailService:
         caching_service: CachingService,
         mysql_service: MySqlService,
         weather_service: WeatherService,
-        config: _Environ[str],
+        config,
     ):
         self.caching_service = caching_service
         self.mysql_service = mysql_service

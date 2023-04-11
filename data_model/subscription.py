@@ -1,5 +1,5 @@
 class Subscription:
-    def __init__(self, db_record):
+    def __init__(self, db_record: tuple):
         self.id = db_record[0]
         self.email = db_record[1]
         self.latitude = db_record[2]
