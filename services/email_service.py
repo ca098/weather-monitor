@@ -11,6 +11,7 @@ from services.caching_service import CachingService
 from services.mysql_service import MySqlService
 from services.weather_service import WeatherService
 from utils.logger_utils import DIR_PATH
+from utils.utils import EMAIL_SERVICE_REFRESH_DEFAULT
 
 
 class EmailService:
@@ -28,7 +29,7 @@ class EmailService:
 
     def run_mail_service(self) -> None:
         refresh_rate = int(
-            self.config.get("EMAIL_SERVICE_REFRESH", 3600)
+            self.config.get("EMAIL_SERVICE_REFRESH", EMAIL_SERVICE_REFRESH_DEFAULT)
         )  # Default every hour
         scheduler = BackgroundScheduler()
         scheduler.add_job(
@@ -61,17 +62,14 @@ class EmailService:
             req = requests.get(
                 f"{open_weather_url}2.5/weather?lat={lat}&lon={lon}&units=metric&appid={open_weather_api_key}"
             )
-
             if req.status_code != 200:
                 logging.error(
                     f"Bad request to open weather map. Response code: {req.status_code}"
                 )
-                return
-
+                continue
             wd = req.json()
             users_for_location = [u for u in all_subscriptions if u.location == loc]
             for user in users_for_location:
-
                 ws = wd["wind"]["speed"]
                 wc = wd["weather"][0]["id"]
                 wt = wd["main"]["temp"]

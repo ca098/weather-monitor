@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `weather_codes` (
+CREATE TABLE IF NOT EXISTS WEATHER_MONITOR.`weather_codes` (
   `id` int NOT NULL AUTO_INCREMENT,
   `thunderstorm` int DEFAULT NULL,
   `drizzle` int DEFAULT NULL,

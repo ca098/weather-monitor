@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `subscriptions` (
+CREATE TABLE IF NOT EXISTS WEATHER_MONITOR.`subscriptions` (
   `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(45) DEFAULT NULL,
   `location_id` int DEFAULT NULL,

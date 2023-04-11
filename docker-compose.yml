@@ -16,3 +16,8 @@ services:
       MYSQL_USER: weather_monitor_user
       MYSQL_PASSWORD: password
     platform: linux/amd64
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `subscribed_metrics` (
+CREATE TABLE IF NOT EXISTS WEATHER_MONITOR.`subscribed_metrics` (
   `id` int NOT NULL AUTO_INCREMENT,
   `subscriptions_id` int DEFAULT NULL,
   `temp_celsius_above` double DEFAULT NULL,

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `location` (
+CREATE TABLE IF NOT EXISTS WEATHER_MONITOR.`location` (
   `id` int NOT NULL AUTO_INCREMENT,
   `latitude` double DEFAULT NULL,
   `longitude` double DEFAULT NULL,

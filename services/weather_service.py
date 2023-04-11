@@ -35,16 +35,9 @@ class WeatherService:
             return {
                 "error": f"The location '{location}' was not found. Make sure it was entered correctly."
             }
-
         loc_id = lat_lon["id"]
-        existing_record = next(
-            (
-                Subscription(s)
-                for s in self.mysql_service.get_subscription(
-                    email=email, location_id=loc_id
-                )
-            ),
-            None,
+        existing_record = bool(
+            self.mysql_service.get_subscription(email=email, location_id=loc_id)
         )
         # Return if pre-existing record (could be changed to call update record?)
         if existing_record:
@@ -62,19 +55,16 @@ class WeatherService:
             weather_code=defaults["weatherCodeEquals"],
             wind_speed_exceeds=defaults["windSpeedExceeds"],
         )
-
         return {"message": f"Subscription has been created successfully"}
 
     def update_subscription(self, email: str, location: str, params: dict) -> dict:
         defaults = SUBSCRIPTION_DEFAULTS
         defaults.update(params)
-
         lat_lon = self.get_latitude_and_longitude(location)
         if not lat_lon:
             return {
                 "error": f"The location '{location}' was not found. Make sure it was entered correctly."
             }
-
         loc_id = lat_lon["id"]
         subscriptions = (
             Subscription(s)
@@ -91,9 +81,7 @@ class WeatherService:
                 weather_code=defaults["weatherCodeEquals"],
                 wind_speed_exceeds=defaults["windSpeedExceeds"],
             )
-
             return {"message": f"Subscription has been updated successfully"}
-
         else:
             return {
                 "error": f"No subscription found for the location '{location}', and email '{email}'."
@@ -132,30 +120,17 @@ class WeatherService:
 
     def get_weather_for_code(self, weather_code: int) -> Optional[str]:
         weather_codes = self.get_weather_codes()
-        return next(
-            (
-                weather
-                for weather, code in weather_codes.items()
-                if int(code) == weather_code
-            ),
-            None,
-        )
+        return {v: k for k, v in weather_codes.items()}.get(weather_code, None)
 
     def get_weather_codes(self) -> dict:
         cache_key = CACHE_KEY_WEATHER_CODES
         cached_result = self.caching_service.get(cache_key)
         if cached_result is not None:
             return cached_result
-
         weather_codes_list = self.mysql_service.get_weather_codes()
         if not weather_codes_list:
             return {}
-
-        weather_codes = (
-            WeatherCodes(weather_codes_list).to_digest_dict()
-            if weather_codes_list
-            else {}
-        )
+        weather_codes = WeatherCodes(weather_codes_list[0]).to_digest_dict()
         self.caching_service.put(cache_key, weather_codes)
         return weather_codes
 
@@ -171,9 +146,7 @@ class WeatherService:
             # Fetch from DB
             stored_location = self.mysql_service.get_location_by_name(location=location)
             if stored_location:
-                return next(
-                    (Location(loc).to_digest_dict() for loc in stored_location), {}
-                )
+                return Location(stored_location[0]).to_digest_dict()
 
             open_cage_url = (
                 f"{self.open_cage_base_url}q={location}&key={self.open_cage_data_key}"
@@ -199,4 +172,4 @@ class WeatherService:
                 # Location not valid
                 return {}
         except ConnectionError as e:
-            LOG.error(f"Error connecting to OpenCage: {e}")
+            LOG.error(f"Error connecting to OpenCage API: {e}")
