@@ -11,7 +11,7 @@ from services.caching_service import CachingService
 from services.mysql_service import MySqlService
 from services.weather_service import WeatherService
 from utils.logger_utils import DIR_PATH
-from utils.utils import EMAIL_SERVICE_REFRESH_DEFAULT
+from utils.utils import EMAIL_SERVICE_REFRESH_DEFAULT, HttpStatus
 
 
 class EmailService:
@@ -46,7 +46,6 @@ class EmailService:
         open_weather_api_key = self.config.get("OPEN_WEATHER_MAP_KEY")
 
         all_subscriptions = self.get_active_subscriptions()
-
         # Get distinct location names of active locations
         locations = {
             loc.location: {"lat": loc.latitude, "lon": loc.longitude}
@@ -62,24 +61,24 @@ class EmailService:
             req = requests.get(
                 f"{open_weather_url}2.5/weather?lat={lat}&lon={lon}&units=metric&appid={open_weather_api_key}"
             )
-            if req.status_code != 200:
+            if req.status_code != HttpStatus.OKAY:
                 logging.error(
                     f"Bad request to open weather map. Response code: {req.status_code}"
                 )
                 continue
-            wd = req.json()
+            weather_data = req.json()
             users_for_location = [u for u in all_subscriptions if u.location == loc]
             for user in users_for_location:
-                ws = wd["wind"]["speed"]
-                wc = wd["weather"][0]["id"]
-                wt = wd["main"]["temp"]
+                ws = weather_data["wind"]["speed"]
+                wc = weather_data["weather"][0]["id"]
+                wt = weather_data["main"]["temp"]
 
                 if ws > user.wind_speed_exceeds:
                     subject, mail_text = self.create_mail_text(
                         user,
                         "wind speed exceeds",
                         user.wind_speed_exceeds,
-                        wd["wind"]["speed"],
+                        weather_data["wind"]["speed"],
                     )
                     self.send_mail(subject, mail_text, user.email, user.location)
                 if wc == user.weather_code:

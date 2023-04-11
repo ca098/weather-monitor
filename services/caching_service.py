@@ -26,7 +26,9 @@ class CachingService:
         else:
             try:
                 LOG.debug(f"Initialising Redis for {self.redis_host}")
-                self.redis = redis.Redis(host=self.redis_host, port=int(self.redis_port))
+                self.redis = redis.Redis(
+                    host=self.redis_host, port=int(self.redis_port)
+                )
 
             except Exception as e:
                 LOG.error(f"Problem initialising redis, assuming no cache: {e}")

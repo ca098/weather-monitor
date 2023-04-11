@@ -1,4 +1,5 @@
 import logging
+import os
 import time
 from enum import Enum
 from threading import Lock
@@ -9,6 +10,8 @@ import mysql.connector as mysql
 from db.queries import *
 
 LOG = logging.getLogger(__name__)
+
+DEFAULT_TIMEOUT = 30
 
 
 class DBMode(str, Enum):
@@ -34,20 +37,18 @@ class MySqlService:
             logging.info(
                 f"Connection to DB initially failed, restarting in 30 seconds: {str(e)}"
             )
-            time.sleep(30)
+            time.sleep(DEFAULT_TIMEOUT)
             cnx = self.__mysql_connect__()
-
         if cnx is not None and cnx.is_connected():
             return cnx
-
         LOG.warning("Warning: Failed to connect to the Database. Retrying...")
-        time.sleep(30)
+        time.sleep(DEFAULT_TIMEOUT)
         cnx = self.__mysql_connect__()
         if cnx is None or not cnx.is_connected():
             LOG.error("Failed to get connection to database.")
 
     def __mysql_connect__(self):
-        port = 3306
+        port = int(os.environ.get("DB_PORT", 3306))
         try:
             return mysql.connect(
                 host=self.host, user=self.user, passwd=self.passwd, port=port
