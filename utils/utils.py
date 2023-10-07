@@ -18,17 +18,5 @@ EMAIL_SERVICE_REFRESH_DEFAULT = 3600
 DEFAULT_CACHE_TIMEOUT = 10800  # 3 Hours
 
 
-class HttpStatus(enum.IntEnum):
-    OKAY = 200
-    CREATED = 201
-
-    BAD_REQUEST = 400
-    UNAUTHORIZED = 401
-    FORBIDDEN = 403
-    NOT_FOUND = 404
-
-    SERVER_ERROR = 500
-
-
 def is_valid_email(email: str) -> bool:
     return bool(re.fullmatch(valid_email_regex, email))

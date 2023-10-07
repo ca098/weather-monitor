@@ -1,6 +1,7 @@
 import atexit
 import logging
 from datetime import datetime
+from http import HTTPStatus
 from typing import List
 
 import requests
@@ -11,7 +12,7 @@ from services.caching_service import CachingService
 from services.mysql_service import MySqlService
 from services.weather_service import WeatherService
 from utils.logger_utils import DIR_PATH
-from utils.utils import EMAIL_SERVICE_REFRESH_DEFAULT, HttpStatus
+from utils.utils import EMAIL_SERVICE_REFRESH_DEFAULT
 
 
 class EmailService:
@@ -61,7 +62,7 @@ class EmailService:
             req = requests.get(
                 f"{open_weather_url}2.5/weather?lat={lat}&lon={lon}&units=metric&appid={open_weather_api_key}"
             )
-            if req.status_code != HttpStatus.OKAY:
+            if req.status_code != HTTPStatus.OK:
                 logging.error(
                     f"Bad request to open weather map. Response code: {req.status_code}"
                 )

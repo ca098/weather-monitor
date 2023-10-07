@@ -1,5 +1,6 @@
 import logging
 import re
+from http import HTTPStatus
 from typing import Optional
 
 import requests
@@ -10,7 +11,7 @@ from data_model.subscription_list import SubscriptionList
 from data_model.weather_codes import WeatherCodes
 from services.caching_service import CACHE_KEY_WEATHER_CODES, CachingService
 from services.mysql_service import MySqlService
-from utils.utils import SUBSCRIPTION_DEFAULTS, HttpStatus
+from utils.utils import SUBSCRIPTION_DEFAULTS
 
 LOG = logging.getLogger(__name__)
 
@@ -154,7 +155,7 @@ class WeatherService:
             open_cage_request = requests.get(open_cage_url)
             open_cage_data = open_cage_request.json()
             if (
-                open_cage_request.status_code == HttpStatus.OKAY
+                open_cage_request.status_code == HTTPStatus.OK
                 and len(open_cage_data["results"]) > 0
             ):
                 lat_lon = open_cage_data["results"][0]["geometry"]
